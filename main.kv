@@ -1,0 +1,64 @@
+MDBoxLayout:
+    orientation: 'vertical'
+    MDFloatLayout:
+        MDTopAppBar:
+            id:TopBar
+            pos_hint: {"top":1}
+            elevation:3
+            title:"Parking"
+            left_action_items: [["arrow-left",lambda x : app.Back(x)]]
+            right_action_items:[["weather-night",lambda x:app.Sombre_jour(x)],["text-box",lambda x : app.Couleur(x)],["information",lambda x : app.Information(x)]]
+    MDScreenManager:
+        id:cr
+        MDScreen:
+            name:"Page1"
+            MDRaisedButton:
+                pos_hint:{"center_x":.5,"center_y":.5}
+                text:"[b]Commencer[/b]"
+                on_release: app.page2(self)
+        MDScreen:
+            name:"Page2"
+            #pos_hint:{"center_x":.5}
+            MDBoxLayout:
+                pos_hint:{"center_x":.5,"center_y":.5}
+                spacing: 10
+                orientation: 'horizontal'
+                size_hint:None,None
+                width:200
+                height: 50
+                MDFillRoundFlatIconButton:
+                    icon: "plus"
+                    text: "[b]Un put[/b]"
+                    on_release: app.Entry(self)
+                    #pos_hint:{"center_x":.5}
+
+                MDFillRoundFlatIconButton:
+                    icon: "backspace"
+                    text: "[b]Un back[/b]"
+                    on_release: app.enlever(self)
+                    #pos_hint:{"center_x":.5}
+        MDScreen:
+            name:"Page3"
+            MDFloatLayout:
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_x:None
+                    width:400
+                    pos_hint:{"center_x":.5}
+                    MDLabel:
+                        id:Lab
+                        text: "Prix"
+                        bold:True
+                        color:[1,0,0,1]
+                        pos_hint:{"center_y":.5}
+                    MDFillRoundFlatIconButton:
+                        icon:"cash-multiple"
+                        text: "[b]Payer[/b]"
+                        pos_hint:{"center_y":.5}
+                        on_release: app.remove(self)
+
+    MDFloatLayout:
+        MDTopAppBar:
+            pos_hint:{"bottom":1}
+            left_action_items: [["menu",lambda x : app.MENU(x)]]
+            right_action_items:[["clock",lambda x:app.HEURS(x)]]
