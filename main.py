@@ -5,19 +5,28 @@ from kivymd.uix.textfield import MDTextField
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.boxlayout import MDBoxLayout
+from kivy.uix.screenmanager import FadeTransition
+# Dans main.py, avant de charger le KV
+from kivy.factory import Factory
+from kivy.uix.screenmanager import FadeTransition
+Factory.register('FadeTransition', FadeTransition)
+from kivymd.uix.list import OneLineListItem
 
 import sqlite3
 import time
 
+#Modifier le six mai 2025
+
     
 class Parking(MDApp):
     def build(self):
-        main = Builder.load_file("main.kv")
+        main = Builder.load_file("main1.kv")
         self.Indice = 0
+        self.Liste2 = ("","","","","") #Au cas cette truple ne contiendra pas de valeurs
         return main
     
     def page2(self,instance):
-        self.root.ids.TopBar.title = "Parking"
+        self.root.ids.cr.transition = FadeTransition(clearcolor = [1,1,1,1])
         self.root.ids.cr.current = "Page2"
     
     def add(self,instance):
@@ -26,8 +35,8 @@ class Parking(MDApp):
     
     def enlever(self,instance):
         with sqlite3.connect("nom.db") as conn:
-            conn.execute("CREATE TABLE IF NOT EXISTS personne (nom TEXT)")
-            cur = conn.execute("SELECT nom FROM personne")
+            conn.execute("CREATE TABLE IF NOT EXISTS personne (nom TEXT, dates TEXT,heurs TEXT)")
+            cur = conn.execute("SELECT nom,dates,heurs FROM personne")
             liste = cur.fetchall()
         if len(liste) == 0:
             self.show_info(Message="Il n'y pas de moto")
@@ -60,12 +69,17 @@ class Parking(MDApp):
         nbt = int(Page[-1]) -1 
         if nbt == 0:
             self.stop()
-        else:
+        elif nbt != 3:
             self.root.ids.cr.current = f"Page{nbt}"
+        else:
+            self.root.ids.cr.current = "Page2"
+            
     def Couleur(self,instance):
         Liste = ['Red', 'Pink', 'Purple', 'DeepPurple', 'Indigo', 'Blue', 'LightBlue', 'Cyan', 'Teal', 'Green', 'LightGreen', 'Lime', 'Yellow', 'Amber', 'Orange', 'DeepOrange', 'Brown', 'Gray', 'BlueGray']
         self.Indice += 1
-        self.Indice %= len(Liste)
+        if self.Indice == len(Liste):
+            self.Indice = 0
+        #self.Indice %= len(Liste)
         self.theme_cls.primary_palette = Liste[self.Indice]
         
     def Entry2(self):
@@ -107,12 +121,10 @@ class Parking(MDApp):
             exist = False
             for elmt in liste:
                 if elmt[0] == texte:
-                    #self.Entryy.error = True
-                    #self.show_info(Message="Cette plaque existe !")
-                    #self.Entryy.helper_text = "Cette plaque existe déjà"
                     #Ici la page 3
                     dates , heurs = time.strftime('%D'),time.strftime('%T')
                     LAB = self.root.ids.Lab
+                    self.Liste2 = (elmt[0],elmt[1],elmt[2],dates,heurs)
                     if dates == elmt[1]:
                         times = heurs.split(":") 
                         if int(times[0]) == 0:
@@ -180,8 +192,36 @@ class Parking(MDApp):
             for elmt in Liste:
                 conn.execute("INSERT INTO personne VALUES (?,?,?)",elmt) 
         
+        with sqlite3.connect('Hist.db') as conn:
+            conn.execute("CREATE TABLE IF NOT EXISTS histoire (nom TEXT,dates1 TEXT , heurs1 TEXT , dates2 TEXT , heurs2 TEXT)")
+            conn.execute("INSERT INTO histoire VALUES (?,?,?,?,?)",self.Liste2)
+        #6 mai 2025
+        
         self.show_info(Message = self.Entryy.text + " est retiré avec sucess !")  
         self.root.ids.cr.current = "Page2"   
+    
+    def show_histy(self,instance):
+        with sqlite3.connect("Hist.db") as conn:
+            conn.execute("CREATE TABLE IF NOT EXISTS histoire (nom TEXT,dates1 TEXT , heurs1 TEXT , dates2 TEXT , heurs2 TEXT)")
+            cur = conn.execute("SELECT nom,dates1,heurs1,dates2,heurs2 FROM histoire")
+            self.Liste3 = cur.fetchall()
+        
+        if len(self.Liste3) == 0:
+            self.show_info(Message="Pas d'histoire")
+        else:
+            self.root.ids.cr.current = "Page4" #Aller a la page 4
+            Pge = self.root.ids.Liste
+            for elmt in self.Liste3:
+                wid = OneLineListItem(
+                    text = elmt[0],
+                    on_release= lambda x : self.info(elmt),
+                )
+                Pge.add_widget(wid)
+            
+    def info(self,value):
+        texte = f"Plaque : {value[0]} \nDate d'arrivé : {value[1]} \n Heurs d'arrivé : {value[2]} \nDate de depart : {value[3]} \n Heurs de depart : {value[4]}"
+        self.root.ids.Lab2.text = f'{texte}'
+        self.root.ids.Nav.set_state("toggle")
         
     def Entry(self,instance):
         self.Entryy = MDTextField(

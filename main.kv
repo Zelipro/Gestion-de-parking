@@ -1,3 +1,4 @@
+#: import FadeTransition kivy.uix.screenmanager.FadeTransition
 MDBoxLayout:
     orientation: 'vertical'
     MDFloatLayout:
@@ -8,8 +9,11 @@ MDBoxLayout:
             title:"Parking"
             left_action_items: [["arrow-left",lambda x : app.Back(x)]]
             right_action_items:[["weather-night",lambda x:app.Sombre_jour(x)],["text-box",lambda x : app.Couleur(x)],["information",lambda x : app.Information(x)]]
+    
+    #MDNavigationLayout:
     MDScreenManager:
         id:cr
+        transition: FadeTransition()
         MDScreen:
             name:"Page1"
             MDRaisedButton:
@@ -24,7 +28,7 @@ MDBoxLayout:
                 spacing: 10
                 orientation: 'horizontal'
                 size_hint:None,None
-                width:200
+                width:350
                 height: 50
                 MDFillRoundFlatIconButton:
                     icon: "plus"
@@ -37,6 +41,10 @@ MDBoxLayout:
                     text: "[b]Un back[/b]"
                     on_release: app.enlever(self)
                     #pos_hint:{"center_x":.5}
+                MDFillRoundFlatIconButton:
+                    icon:"history"
+                    text:"[b]Histoir[/b]"
+                    on_release:app.show_histy(self)
         MDScreen:
             name:"Page3"
             MDFloatLayout:
@@ -56,7 +64,13 @@ MDBoxLayout:
                         text: "[b]Payer[/b]"
                         pos_hint:{"center_y":.5}
                         on_release: app.remove(self)
+        MDScreen:
+            name:"Page4"
+            MDList:
+                id:Liste
 
+        
+    
     MDFloatLayout:
         MDTopAppBar:
             pos_hint:{"bottom":1}

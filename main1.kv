@@ -1,0 +1,146 @@
+#: import FadeTransition kivy.uix.screenmanager.FadeTransition
+MDNavigationLayout:
+    MDScreenManager:
+        id:cr
+        transition:FadeTransition()
+        MDScreen:
+            name:"Page1"
+            MDBoxLayout:
+                orientation: 'vertical'
+                MDFloatLayout:
+                    MDTopAppBar:
+                        id:TopBar
+                        pos_hint: {"top":1}
+                        elevation:3
+                        title:"Bienvenu"
+                        left_action_items: [["arrow-left",lambda x : app.Back(x)]]
+                        right_action_items:[["weather-night",lambda x:app.Sombre_jour(x)],["text-box",lambda x : app.Couleur(x)],["information",lambda x : app.Information(x)]]
+                
+                #Corps:
+                MDRaisedButton:
+                    pos_hint:{"center_x":.5,"center_y":.5}
+                    text:"[b]Commencer[/b]"
+                    on_release: app.page2(self)
+                
+                #Bas
+                MDFloatLayout:
+                    MDTopAppBar:
+                        pos_hint:{"bottom":1}
+                        left_action_items: [["menu",lambda x : app.MENU(x)]]
+                        right_action_items:[["clock",lambda x:app.HEURS(x)]]
+        
+        MDScreen:
+            name:"Page2"
+            MDBoxLayout:
+                orientation: 'vertical'
+                MDFloatLayout:
+                    MDTopAppBar:
+                        id:TopBar
+                        pos_hint: {"top":1}
+                        elevation:3
+                        title:"Les options"
+                        left_action_items: [["arrow-left",lambda x : app.Back(x)]]
+                        #right_action_items:[["weather-night",lambda x:app.Sombre_jour(x)],["text-box",lambda x : app.Couleur(x)],["information",lambda x : app.Information(x)]]
+                
+                #Corps:
+                MDBoxLayout:
+                    pos_hint:{"center_x":.5,"center_y":.5}
+                    spacing: 10
+                    orientation: 'horizontal'
+                    size_hint:None,None
+                    width:350
+                    height: 50
+                    MDFillRoundFlatIconButton:
+                        icon: "plus"
+                        text: "[b]Un put[/b]"
+                        on_release: app.Entry(self)
+                        #pos_hint:{"center_x":.5}
+
+                    MDFillRoundFlatIconButton:
+                        icon: "backspace"
+                        text: "[b]Un back[/b]"
+                        on_release: app.enlever(self)
+                        #pos_hint:{"center_x":.5}
+                    MDFillRoundFlatIconButton:
+                        icon:"history"
+                        text:"[b]Histoir[/b]"
+                        on_release:app.show_histy(self)
+                
+                #Bas
+                MDFloatLayout:
+                    MDTopAppBar:
+                        pos_hint:{"bottom":1}
+                        left_action_items: [["menu",lambda x : app.MENU(x)]]
+                        right_action_items:[["clock",lambda x:app.HEURS(x)]]
+        MDScreen:
+            name:"Page3"
+            MDBoxLayout:
+                orientation: 'vertical'
+                MDFloatLayout:
+                    MDTopAppBar:
+                        id:TopBar
+                        pos_hint: {"top":1}
+                        elevation:3
+                        title:"Payement"
+                        left_action_items: [["arrow-left",lambda x : app.Back(x)]]
+                        #right_action_items:[["weather-night",lambda x:app.Sombre_jour(x)],["text-box",lambda x : app.Couleur(x)],["information",lambda x : app.Information(x)]]
+                
+                #Corps:
+                    MDBoxLayout:
+                        orientation: 'horizontal'
+                        size_hint:None,None
+                        width:400
+                        height:50
+                        pos_hint:{"center_x":.5,"center_y":.05}
+                        #md_bg_color:[1,0,0,1]
+                        MDLabel:
+                            id:Lab
+                            text: "Prix"
+                            bold:True
+                            color:[1,0,0,1]
+                            pos_hint:{"center_y":.5}
+                        MDFillRoundFlatIconButton:
+                            icon:"cash-multiple"
+                            text: "[b]Payer[/b]"
+                            pos_hint:{"center_y":.5}
+                            on_release: app.remove(self)
+                    
+                #Bas
+                MDFloatLayout:
+                    MDTopAppBar:
+                        pos_hint:{"bottom":1}
+                        left_action_items: [["menu",lambda x : app.MENU(x)]]
+                        right_action_items:[["clock",lambda x:app.HEURS(x)]]
+        MDScreen:
+            name:"Page4"
+            MDBoxLayout:
+                orientation: 'vertical'
+                MDFloatLayout:
+                    MDTopAppBar:
+                        id:TopBar
+                        pos_hint: {"top":1}
+                        elevation:3
+                        title:"Histoire"
+                        left_action_items: [["arrow-left",lambda x : app.Back(x)]]
+                        #right_action_items:[["weather-night",lambda x:app.Sombre_jour(x)],["text-box",lambda x : app.Couleur(x)],["information",lambda x : app.Information(x)]]
+                
+                #Corps:
+                MDList:
+                    id:Liste
+                    
+                #Bas
+                MDFloatLayout:
+                    MDTopAppBar:
+                        pos_hint:{"bottom":1}
+                        left_action_items: [["menu",lambda x : app.MENU(x)]]
+                        right_action_items:[["clock",lambda x:app.HEURS(x)]]
+    MDNavigationDrawer:
+        id:Nav
+        md_bg_color:app.theme_cls.primary_color
+        MDLabel:
+            id:Lab2
+            pos_hint:{"center_y":.5}
+            halign:"center"
+            bold:True
+
+            
